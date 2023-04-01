@@ -12,3 +12,6 @@ provider:
 build_platform:
   linux_aarch64: linux_aarch64
   linux_ppc64le: linux_ppc64le
+bot:
+  abi_migration_branches:
+  - qt6
