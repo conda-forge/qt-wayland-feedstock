@@ -60,8 +60,8 @@ test:
   commands:
     {% set qt_libs = ["WaylandClient", "WaylandCompositor"] %}
     {% for each_qt_lib in qt_libs %}
-    - test -d $PREFIX/include/qt/Qt{{ each_qt_lib }}  # [unix]
-    - test -f $PREFIX/lib/libQt5{{ each_qt_lib }}${SHLIB_EXT}  # [unix]
+    - test -d $PREFIX/include/qt6/Qt{{ each_qt_lib }}  # [unix]
+    - test -f $PREFIX/lib/libQt6{{ each_qt_lib }}${SHLIB_EXT}  # [unix]
     {% endfor %}
 
 about:

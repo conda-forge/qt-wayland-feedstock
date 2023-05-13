@@ -39,8 +39,8 @@ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib64/pkgconfig/"
 chmod +x g++ gcc gcc-ar
 export PATH=${PWD}:${PATH}
 
-qmake -set prefix $PREFIX
-qmake QMAKE_LIBDIR=${PREFIX}/lib \
+qmake6 -set prefix $PREFIX
+qmake6 QMAKE_LIBDIR=${PREFIX}/lib \
     QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \
     INCLUDEPATH+="${PREFIX}/include" \
     PKG_CONFIG_EXECUTABLE=$(which pkg-config) \
