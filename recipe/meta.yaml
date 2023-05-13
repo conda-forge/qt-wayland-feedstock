@@ -1,11 +1,11 @@
-{% set version = "5.15.8" %}
+{% set version = "6.5.0" %}
 package:
   name: qt-wayland
   version: {{ version }}
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: fa0e7bd40f5da2d30fbdb51a436c5776950d6bd070b61a8d62d85cb537934529
+  sha256: ccc57fa277fc5f1c1c2c4733eae80a60996b67a067233c47809e542aa31759a3
 
 build:
   skip: true   # [not linux]
@@ -20,7 +20,7 @@ requirements:
     - make
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
-    - qt-main                            # [build_platform != target_platform]
+    - qt6-main {{ version }}             # [build_platform != target_platform]
     - sysroot_linux-64 2.17              # [linux]
     - {{ cdt('mesa-libgl-devel') }}      # [linux]
     - {{ cdt('mesa-libegl') }}           # [linux]
@@ -30,7 +30,7 @@ requirements:
     - {{ cdt('libglvnd-glx') }}          # [linux]
     - {{ cdt('libglvnd-egl') }}          # [linux]
   host:
-    - qt-main  {{ version }}
+    - qt6-main  {{ version }}
     - wayland
     - fontconfig
     - freetype
