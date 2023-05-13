@@ -4,7 +4,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-opensource-src-{{ version }}.tar.xz
+  url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-src-{{ version }}.tar.xz
   sha256: ccc57fa277fc5f1c1c2c4733eae80a60996b67a067233c47809e542aa31759a3
 
 build:
