@@ -8,10 +8,8 @@ conda_build:
 conda_forge_output_validation: true
 provider:
   linux_aarch64: azure
-  linux_ppc64le: azure
 build_platform:
   linux_aarch64: linux_aarch64
-  linux_ppc64le: linux_ppc64le
 bot:
   abi_migration_branches:
   - qt6

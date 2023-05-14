@@ -11,6 +11,7 @@ mkdir qt-build
 pushd qt-build
 
 cmake ${CMAKE_ARGS} \
+    -DQT_HOST_PATH=${PREFIX}        \
     ..
 
 make -j ${CPU_COUNT}
