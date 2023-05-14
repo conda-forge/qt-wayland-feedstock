@@ -70,11 +70,14 @@ about:
   home: http://qt-project.org
   license: LGPL-3.0-only
   license_file:
-    -  LICENSE.FDL
-    -  LICENSE.GPL2
-    -  LICENSE.GPL3
-    -  LICENSE.GPL3-EXCEPT
-    -  LICENSE.LGPL3
+    - LICENSES/BSD-3-Clause.txt
+    - LICENSES/GFDL-1.3-no-invariants-only.txt
+    - LICENSES/GPL-2.0-only.txt
+    - LICENSES/GPL-3.0-only.txt
+    - LICENSES/LGPL-3.0-only.txt
+    - LICENSES/LicenseRef-Qt-Commercial.txt
+    - LICENSES/Qt-GPL-exception-1.0.txt
+
   summary: QtWayland module
   description: |
     The QtWayland module consists of two parts.
