@@ -30,6 +30,7 @@ requirements:
     - {{ cdt('libdrm-devel') }}          # [linux]
     - {{ cdt('libglvnd-glx') }}          # [linux]
     - {{ cdt('libglvnd-egl') }}          # [linux]
+    - {{ cdt('libglvnd-devel') }}        # [linux]
   host:
     - qt6-main  {{ version }}
     - wayland
