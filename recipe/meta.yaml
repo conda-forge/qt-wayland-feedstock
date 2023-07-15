@@ -55,6 +55,8 @@ requirements:
     - xorg-libxrandr
     - xorg-libxcomposite
   run:
+    # Ensure same version of qt6 is used
+    - qt6-main  {{ version }}
     # Needs a run export?
     - xorg-libxcomposite
 
