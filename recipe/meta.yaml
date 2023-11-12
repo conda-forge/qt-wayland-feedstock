@@ -1,4 +1,4 @@
-{% set version = "6.5.1" %}
+{% set version = "6.6.0" %}
 package:
   name: qt6-wayland
   version: {{ version }}
