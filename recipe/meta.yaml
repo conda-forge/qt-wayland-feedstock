@@ -18,10 +18,13 @@ requirements:
   build:
     - perl
     - cmake
-    - make
+    - ninja
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - qt6-main {{ version }}             # [build_platform != target_platform]
+    - wayland                            # [build_platform != target_platform]
+    - libvulkan-headers                  # [build_platform != target_platform and not osx]
+    - libvulkan-loader                   # [build_platform != target_platform and not osx]
     - sysroot_linux-64 2.17              # [linux]
     - {{ cdt('mesa-libgl-devel') }}      # [linux]
     - {{ cdt('mesa-libegl') }}           # [linux]
