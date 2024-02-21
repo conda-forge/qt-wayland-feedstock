@@ -9,7 +9,7 @@ source:
 
 build:
   skip: true   # [not linux]
-  number: 0
+  number: 1
   detect_binary_files_with_prefix: true
   run_exports:
     - {{ pin_subpackage('qt6-wayland', max_pin='x.x') }}
