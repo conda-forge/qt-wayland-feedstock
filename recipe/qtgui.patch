@@ -1,0 +1,42 @@
+From 7ad64d431a2096828eae1a5001ab4482bbea4121 Mon Sep 17 00:00:00 2001
+From: Inho Lee <inho.lee@qt.io>
+Date: Fri, 22 Mar 2024 10:09:27 +0100
+Subject: [PATCH] Make Qt::Gui as a required module
+
+A module Qt::Gui should not be an optional
+
+Fixes: QTBUG-123489
+Pick-to: 6.6 6.5
+Change-Id: I7f4129b37aa39e41cd4ce6dfc267fcf916f3ddbc
+Reviewed-by: David Redondo <qt@david-redondo.de>
+(cherry picked from commit 9848b60e684ba2fcddff8218d893f45166a34639)
+Reviewed-by: Inho Lee <inho.lee@qt.io>
+---
+ CMakeLists.txt | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6649dfccb..51fdc9e67 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,10 +25,10 @@ endif()
+ 
+ find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS
+     Core
++    Gui
+ )
+ 
+ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
+-    Gui
+     OpenGL
+     Quick
+ )
+@@ -40,8 +40,4 @@ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
+ #    return()
+ #endif()
+ # special case end
+-if(NOT TARGET Qt::Gui)
+-    message(NOTICE "Skipping the build as the condition \"TARGET Qt::Gui\" is not met.")
+-    return()
+-endif()
+ qt_build_repo()
