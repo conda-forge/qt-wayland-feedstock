@@ -1,14 +1,11 @@
-{% set version = "6.7.0" %}
+{% set version = "6.7.1" %}
 package:
   name: qt6-wayland
   version: {{ version }}
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-src-{{ version }}.tar.xz
-  md5: 2ca277f6d67a19c7fe5e054dfbeb5005
-  patches:
-   # https://bugreports.qt.io/browse/QTBUG-123489
-   - qtgui.patch
+  md5: 16061a05f6fa548ce3fe3194ec80b0ef
 
 build:
   skip: true  # [not linux]
@@ -24,11 +21,11 @@ requirements:
     - ninja
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - qt6-main {{ version }}             # [build_platform != target_platform]
     - wayland                            # [build_platform != target_platform]
     - libvulkan-headers                  # [build_platform != target_platform and not osx]
     - libvulkan-loader                   # [build_platform != target_platform and not osx]
-    - sysroot_linux-64 2.17              # [linux]
     - {{ cdt('mesa-libgl-devel') }}      # [linux]
     - {{ cdt('mesa-libegl') }}           # [linux]
     - {{ cdt('mesa-libegl-devel') }}     # [linux]
