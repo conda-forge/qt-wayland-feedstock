@@ -182,6 +182,6 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
-* [@conda-forge/qt-main](https://github.com/conda-forge/qt-main/)
+* [@conda-forge/qt-main](https://github.com/orgs/conda-forge/teams/qt-main/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 
