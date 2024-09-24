@@ -9,7 +9,7 @@ source:
 
 build:
   skip: true  # [not linux]
-  number: 0
+  number: 1
   detect_binary_files_with_prefix: true
   run_exports:
     - {{ pin_subpackage('qt6-wayland', max_pin='x.x') }}
@@ -24,21 +24,21 @@ requirements:
     - {{ stdlib("c") }}
     - qt6-main {{ version }}             # [build_platform != target_platform]
     - wayland                            # [build_platform != target_platform]
-    - libvulkan-headers                  # [build_platform != target_platform and not osx]
-    - libvulkan-loader                   # [build_platform != target_platform and not osx]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl') }}           # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
-    - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libglvnd-glx') }}          # [linux]
-    - {{ cdt('libglvnd-egl') }}          # [linux]
-    - {{ cdt('libglvnd-devel') }}        # [linux]
+    - libgl-devel                        # [build_platform != target_platform]
+    - libegl-devel                       # [build_platform != target_platform]
+    - libopengl-devel                    # [build_platform != target_platform]
+    - libglx-devel                       # [build_platform != target_platform]
+    - libvulkan-headers                  # [build_platform != target_platform]
+    - libvulkan-loader                   # [build_platform != target_platform]
   host:
     - qt6-main {{ version }}
     - wayland
-    - libvulkan-headers                  # [not osx]
-    - libvulkan-loader                   # [not osx]
+    - libgl-devel
+    - libegl-devel
+    - libopengl-devel
+    - libglx-devel
+    - libvulkan-headers
+    - libvulkan-loader
     - fontconfig
     - freetype
     - zlib
