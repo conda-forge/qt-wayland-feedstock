@@ -26,6 +26,8 @@ glib:
 - '2'
 perl:
 - 5.32.1
+qt:
+- '5.15'
 target_platform:
 - linux-64
 zip_keys:
