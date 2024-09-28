@@ -1,5 +1,3 @@
-os_version:
-  linux_64: cos7
 github:
   branch_name: main
   tooling_branch_name: main
