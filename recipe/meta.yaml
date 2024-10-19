@@ -1,11 +1,11 @@
-{% set version = "5.15.8" %}
+{% set version = "5.15.15" %}
 package:
   name: qt-wayland
   version: {{ version }}
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: fa0e7bd40f5da2d30fbdb51a436c5776950d6bd070b61a8d62d85cb537934529
+  sha256: bd1b577ec2311c0f615ca4a21aeb108a0b1b5e112c94191ff709cec814599b51
 
 build:
   skip: true   # [not linux]
@@ -20,41 +20,25 @@ requirements:
     - make
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
-    - qt-main                            # [build_platform != target_platform]
-    - sysroot_linux-64 2.17              # [linux]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl') }}           # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
+    - {{ stdlib('c') }}
     - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libglvnd-glx') }}          # [linux]
-    - {{ cdt('libglvnd-egl') }}          # [linux]
+    - qt-main  {{ version }}             # [build_platform != target_platform]
+    - wayland                            # [build_platform != target_platform]
+    - libgl-devel                        # [build_platform != target_platform]
+    - libegl-devel                       # [build_platform != target_platform]
+    - libdrm                             # [build_platform != target_platform]
   host:
     - qt-main  {{ version }}
     - wayland
+    - libgl-devel
+    - libegl-devel
+    - libdrm
     - fontconfig
     - freetype
     - zlib
     - glib
-    # The following X11 dependencies are only needed to build
-    # the features
-    #   XComposite EGL ......................... yes
-    #   XComposite GLX ......................... yes
-    # But these are being removed in qt 6, so it doesn't seem
-    # worthwhile to build them for conda-forge in 2023
-    # https://codereview.qt-project.org/c/qt/qtwayland/+/380604
-    #
-    # But.... they seem to get pulled in accidentally from qt-main
-    # since qt-main is currently built with full X11 support
-    # So for now, it doesn't really hurt to include them
-    - libxkbcommon
-    - xorg-libx11
-    - xorg-libxext
-    - xorg-libxrandr
-    - xorg-libxcomposite
   run:
-    # Needs a run export?
-    - xorg-libxcomposite
+    - libxkbcommon
 
 test:
   commands:
