@@ -35,12 +35,11 @@ ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
 export LD=${GXX}
 export CC=${GCC}
 export CXX=${GXX}
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib64/pkgconfig/"
+# https://github.com/conda-forge/xorg-libxfixes-feedstock/issues/13
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${PREFIX}/share/pkgconfig/:/usr/lib64/pkgconfig/"
 chmod +x g++ gcc gcc-ar
 export PATH=${PWD}:${PATH}
 
-# Workaround for https://github.com/conda-forge/xorg-libxfixes-feedstock/issues/13
-sed -i '/^Requires:/c\Requires: xproto' "${PREFIX}/lib/pkgconfig/xfixes.pc"
 # To debug finding features one can use something like
 # pkg-config --debug --exists xcomposite
 qmake -set prefix $PREFIX
