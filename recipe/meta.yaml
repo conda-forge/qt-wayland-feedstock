@@ -49,8 +49,10 @@ requirements:
     - xorg-libxrandr
     - xorg-libxcomposite
     - xorg-xorgproto
-    # - xorg-xproto
-    # - xorg-kbproto
+    - xorg-xproto
+    - xorg-compositeproto
+    - xorg-kbproto
+    # https://github.com/conda-forge/xorg-libxfixes-feedstock/issues/13
     # - xorg-fixesproto
   run:
     # Needs a run export?
