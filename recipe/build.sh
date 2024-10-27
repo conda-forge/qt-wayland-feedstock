@@ -39,6 +39,8 @@ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib64/pkgconfig/"
 chmod +x g++ gcc gcc-ar
 export PATH=${PWD}:${PATH}
 
+# To debug finding features one can use something like
+pkg-config --debug --cflags --libs xcomposite
 qmake -set prefix $PREFIX
 qmake QMAKE_LIBDIR=${PREFIX}/lib \
     QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \

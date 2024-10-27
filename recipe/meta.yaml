@@ -48,6 +48,10 @@ requirements:
     - xorg-libxext
     - xorg-libxrandr
     - xorg-libxcomposite
+    - xorg-xorgproto
+    # - xorg-xproto
+    # - xorg-kbproto
+    # - xorg-fixesproto
   run:
     # Needs a run export?
     - xorg-libxcomposite
