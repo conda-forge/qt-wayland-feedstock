@@ -5,7 +5,7 @@ package:
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-src-{{ version }}.tar.xz
-  md5: 210dce413cdbce89cefa235ba2273e84
+  md5: 5215ab60ea5f8fcafb35c7709b4eb386
 
 build:
   skip: true  # [not linux]
