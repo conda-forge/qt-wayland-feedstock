@@ -1,11 +1,11 @@
-{% set version = "5.15.15" %}
+{% set version = "5.15.17" %}
 package:
   name: qt-wayland
   version: {{ version }}
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: bd1b577ec2311c0f615ca4a21aeb108a0b1b5e112c94191ff709cec814599b51
+  sha256: e3b62c98b3951e9b446e9d17670806cb136df142e47ec3d9b4836b48da81f5cb
 
 build:
   skip: true  # [not linux]
