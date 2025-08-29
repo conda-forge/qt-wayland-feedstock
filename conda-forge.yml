@@ -1,5 +1,3 @@
-os_version:
-  linux_64: cos7
 github:
   branch_name: main
   tooling_branch_name: main
@@ -8,10 +6,8 @@ conda_build:
 conda_forge_output_validation: true
 provider:
   linux_aarch64: azure
-  linux_ppc64le: azure
 build_platform:
-  linux_aarch64: linux_aarch64
-  linux_ppc64le: linux_ppc64le
+  linux_aarch64: linux_64
 bot:
   abi_migration_branches:
   - qt6

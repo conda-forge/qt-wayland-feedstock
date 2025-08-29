@@ -53,13 +53,6 @@ Current build status
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/qt-wayland-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_" alt="variant">
                 </a>
               </td>
-            </tr><tr>
-              <td>linux_ppc64le</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=18827&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/qt-wayland-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_" alt="variant">
-                </a>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -73,7 +66,7 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-qt--wayland-green.svg)](https://anaconda.org/conda-forge/qt-wayland) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/qt-wayland.svg)](https://anaconda.org/conda-forge/qt-wayland) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-wayland.svg)](https://anaconda.org/conda-forge/qt-wayland) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/qt-wayland.svg)](https://anaconda.org/conda-forge/qt-wayland) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-qt6--wayland-green.svg)](https://anaconda.org/conda-forge/qt6-wayland) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/qt6-wayland.svg)](https://anaconda.org/conda-forge/qt6-wayland) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt6-wayland.svg)](https://anaconda.org/conda-forge/qt6-wayland) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/qt6-wayland.svg)](https://anaconda.org/conda-forge/qt6-wayland) |
 
 Installing qt-wayland
 =====================
@@ -85,41 +78,41 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `qt-wayland` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `qt6-wayland` can be installed with `conda`:
 
 ```
-conda install qt-wayland
-```
-
-or with `mamba`:
-
-```
-mamba install qt-wayland
-```
-
-It is possible to list all of the versions of `qt-wayland` available on your platform with `conda`:
-
-```
-conda search qt-wayland --channel conda-forge
+conda install qt6-wayland
 ```
 
 or with `mamba`:
 
 ```
-mamba search qt-wayland --channel conda-forge
+mamba install qt6-wayland
+```
+
+It is possible to list all of the versions of `qt6-wayland` available on your platform with `conda`:
+
+```
+conda search qt6-wayland --channel conda-forge
+```
+
+or with `mamba`:
+
+```
+mamba search qt6-wayland --channel conda-forge
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search qt-wayland --channel conda-forge
+mamba repoquery search qt6-wayland --channel conda-forge
 
-# List packages depending on `qt-wayland`:
-mamba repoquery whoneeds qt-wayland --channel conda-forge
+# List packages depending on `qt6-wayland`:
+mamba repoquery whoneeds qt6-wayland --channel conda-forge
 
-# List dependencies of `qt-wayland`:
-mamba repoquery depends qt-wayland --channel conda-forge
+# List dependencies of `qt6-wayland`:
+mamba repoquery depends qt6-wayland --channel conda-forge
 ```
 
 
