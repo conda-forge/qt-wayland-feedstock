@@ -1,11 +1,11 @@
-{% set version = "6.9.2" %}
+{% set version = "6.9.3" %}
 package:
   name: qt6-wayland
   version: {{ version }}
 
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtwayland-everywhere-src-{{ version }}.tar.xz
-  md5: d9ae8a1bd603f0a4a0257aa3e7291d2b 
+  md5: 01f375bdbf4805053c175516a42266a0
 
 build:
   skip: true  # [not linux]
