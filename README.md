@@ -3,7 +3,7 @@ About qt-wayland-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/qt-wayland-feedstock/blob/main/LICENSE.txt)
 
-Home: http://qt-project.org
+Home: http://qt-project.org/
 
 Package license: LGPL-3.0-only
 
@@ -20,7 +20,6 @@ Wayland platform plugin --
 
 QtWaylandCompositor API --
     Enables the creation of Wayland compositors using Qt and QtQuick.
-
 
 Current build status
 ====================
