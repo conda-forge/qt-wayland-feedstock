@@ -16,7 +16,7 @@ build:
 
   # 2-stage build also needed
   # skip: ${{ build_platform != target_platform }}
-  number: 0
+  number: 1
 
 requirements:
   build:
