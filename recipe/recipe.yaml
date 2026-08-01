@@ -16,7 +16,7 @@ build:
 
   # 2-stage build also needed
   # skip: ${{ build_platform != target_platform }}
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -80,6 +80,18 @@ tests:
         then:
           - test -d $PREFIX/include/qt6/QtWaylandCompositor
           - test -f $PREFIX/lib/libQt6WaylandCompositor${SHLIB_EXT}
+
+          - test -f $PREFIX/lib/qt6/plugins/wayland-decoration-client/libadwaita${SHLIB_EXT}
+          # Existing on disk is not enough -- it also has to register the keys
+          # that QT_WAYLAND_DECORATION=adwaita (or =gnome) looks up.
+          - $PREFIX/lib/qt6/bin/qtplugininfo --full-json $PREFIX/lib/qt6/plugins/wayland-decoration-client/libadwaita${SHLIB_EXT} > adwaita.json
+          - cat adwaita.json
+          - grep -q '"adwaita"' adwaita.json
+          - grep -q '"gnome"' adwaita.json
+
+          # Shell integrations, likewise conditional on features being detected.
+          - test -f $PREFIX/lib/qt6/plugins/wayland-shell-integration/libqt-shell${SHLIB_EXT}
+          - test -f $PREFIX/lib/qt6/plugins/wayland-shell-integration/libivi-shell${SHLIB_EXT}
 
 about:
   homepage: http://qt-project.org
