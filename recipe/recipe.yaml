@@ -13,9 +13,6 @@ source:
 build:
   skip:
     - not linux
-
-  # 2-stage build also needed
-  # skip: ${{ build_platform != target_platform }}
   number: 1
 
 requirements:
