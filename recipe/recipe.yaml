@@ -1,5 +1,5 @@
 context:
-  version: "6.11.2"
+  version: "6.11.3"
   maj_min: ${{ (version | split('.'))[:2] | join('.') }}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://download.qt.io/official_releases/qt/${{ maj_min }}/${{ version }}/submodules/qtwayland-everywhere-src-${{ version }}.tar.xz
-  md5: 198625239c5ea2e55d3c21408cd3c58f
+  md5: f009994ad18fa54591e05ede4831bd7a
 
 build:
   skip:
