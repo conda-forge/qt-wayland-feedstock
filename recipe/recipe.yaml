@@ -11,6 +11,7 @@ source:
   md5: 240f796b0a64e36ef9b432247aa694af
   patches:
     - 0001-adwaita-tint-button-icons.patch
+    - 0002-adwaita-read-settings-before-first-paint.patch
 
 build:
   skip:
