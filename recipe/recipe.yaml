@@ -103,7 +103,7 @@ about:
     - LICENSES/GPL-3.0-only.txt
     - LICENSES/LGPL-3.0-only.txt
     - LICENSES/LicenseRef-Qt-Commercial.txt
-    - LICENSES/Qt-GPL-exception-1.0.txt
+    - LICENSES/MIT.txt
 
   summary: QtWayland module
   description: |
