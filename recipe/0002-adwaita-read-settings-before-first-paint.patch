@@ -1,0 +1,158 @@
+Subject: [PATCH] adwaita decoration: read portal settings before the first paint
+
+loadConfiguration() ran from a zero-delay timer and read the
+xdg-desktop-portal settings asynchronously, so a window was first painted
+with the default light colors and button layout and then changed a moment
+later. Call it from the constructor, load the icons and default colors
+first, and query the portal synchronously with a 200 ms timeout, falling
+back to the asynchronous call if the portal is slow. Move the reply
+handling into applySettings(), and skip requestRepaint() while the
+decoration has no window yet.
+
+--- a/src/plugins/decorations/adwaita/qwaylandadwaitadecoration.cpp
++++ b/src/plugins/decorations/adwaita/qwaylandadwaitadecoration.cpp
+@@ -16,6 +16,7 @@
+ #include <QtDBus/QDBusPendingCall>
+ #include <QtDBus/QDBusPendingCallWatcher>
+ #include <QtDBus/QDBusPendingReply>
++#include <QtDBus/QDBusReply>
+ #include <QtDBus/QDBusVariant>
+ #include <QtDBus/QtDBus>
+ 
+@@ -91,7 +92,7 @@
+     if (!m_font) // Fallback to GNOME's default font
+         m_font = std::make_unique<QFont>("Cantarell"_L1, 10);
+ 
+-    QTimer::singleShot(0, this, &QWaylandAdwaitaDecoration::loadConfiguration);
++    loadConfiguration();
+ }
+ 
+ QMargins QWaylandAdwaitaDecoration::margins(QWaylandAbstractDecoration::MarginsType marginsType) const
+@@ -314,6 +315,14 @@
+     qRegisterMetaType<QDBusVariant>();
+     qDBusRegisterMetaType<QMap<QString, QVariantMap>>();
+ 
++    // Load SVG icons
++    for (auto mapIt = buttonMap.constBegin(); mapIt != buttonMap.constEnd(); mapIt++) {
++        const QString fullName = mapIt.value() + QStringLiteral(".svg");
++        m_icons[mapIt.key()] = getIconSvg(fullName);
++    }
++
++    updateColors(false);
++
+     QDBusConnection connection = QDBusConnection::sessionBus();
+ 
+     QDBusMessage message = QDBusMessage::createMethodCall("org.freedesktop.portal.Desktop"_L1,
+@@ -323,45 +332,50 @@
+     message << QStringList{ { "org.gnome.desktop.wm.preferences"_L1 },
+                             { "org.freedesktop.appearance"_L1 } };
+ 
+-    QDBusPendingCall pendingCall = connection.asyncCall(message);
+-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pendingCall, this);
+-    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+-        QDBusPendingReply<QMap<QString, QVariantMap>> reply = *watcher;
+-        if (reply.isValid()) {
+-            QMap<QString, QVariantMap> settings = reply.value();
+-            if (!settings.isEmpty()) {
+-                const uint colorScheme = settings.value("org.freedesktop.appearance"_L1).value("color-scheme"_L1).toUInt();
+-                updateColors(colorScheme == 1); // 1 == Prefer Dark
+-                const QString buttonLayout = settings.value("org.gnome.desktop.wm.preferences"_L1).value("button-layout"_L1).toString();
+-                if (!buttonLayout.isEmpty())
+-                    updateTitlebarLayout(buttonLayout);
+-                // Do not rely on titlebar-font in case titlebar-uses-desktop-font is set to true
+-                // https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/blob/main/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in
+-                const bool titlebarUseDesktopFont = settings.value("org.gnome.desktop.wm.preferences"_L1).value("titlebar-uses-desktop-font"_L1).toBool();
+-                if (!titlebarUseDesktopFont) {
+-                    // Workaround for QGtkStyle not having correct titlebar font
+-                    const QString titlebarFont =
+-                        settings.value("org.gnome.desktop.wm.preferences"_L1).value("titlebar-font"_L1).toString();
+-                    if (titlebarFont.contains("bold"_L1, Qt::CaseInsensitive)) {
+-                        m_font->setBold(true);
+-                    }
+-                }
+-            }
+-        }
+-        watcher->deleteLater();
+-    });
++    // Read the settings before the window is first painted, so that it does not
++    // show with the default colors and buttons and then change a moment later.
++    // Wait only briefly: if the portal is slow to answer, ask again without
++    // blocking and apply the settings when they arrive.
++    const QDBusReply<QMap<QString, QVariantMap>> reply = connection.call(message, QDBus::Block, 200);
++    if (reply.isValid()) {
++        applySettings(reply.value());
++    } else {
++        QDBusPendingCall pendingCall = connection.asyncCall(message);
++        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pendingCall, this);
++        QObject::connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
++            QDBusPendingReply<QMap<QString, QVariantMap>> reply = *watcher;
++            if (reply.isValid())
++                applySettings(reply.value());
++            watcher->deleteLater();
++        });
++    }
+ 
+     QDBusConnection::sessionBus().connect(QString(), "/org/freedesktop/portal/desktop"_L1,
+                                           "org.freedesktop.portal.Settings"_L1, "SettingChanged"_L1, this,
+                                           SLOT(settingChanged(QString,QString,QDBusVariant)));
++}
+ 
+-    // Load SVG icons
+-    for (auto mapIt = buttonMap.constBegin(); mapIt != buttonMap.constEnd(); mapIt++) {
+-        const QString fullName = mapIt.value() + QStringLiteral(".svg");
+-        m_icons[mapIt.key()] = getIconSvg(fullName);
+-    }
++void QWaylandAdwaitaDecoration::applySettings(const QMap<QString, QVariantMap> &settings)
++{
++    if (settings.isEmpty())
++        return;
+ 
+-    updateColors(false);
++    const uint colorScheme = settings.value("org.freedesktop.appearance"_L1).value("color-scheme"_L1).toUInt();
++    updateColors(colorScheme == 1); // 1 == Prefer Dark
++    const QString buttonLayout = settings.value("org.gnome.desktop.wm.preferences"_L1).value("button-layout"_L1).toString();
++    if (!buttonLayout.isEmpty())
++        updateTitlebarLayout(buttonLayout);
++    // Do not rely on titlebar-font in case titlebar-uses-desktop-font is set to true
++    // https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/blob/main/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in
++    const bool titlebarUseDesktopFont = settings.value("org.gnome.desktop.wm.preferences"_L1).value("titlebar-uses-desktop-font"_L1).toBool();
++    if (!titlebarUseDesktopFont) {
++        // Workaround for QGtkStyle not having correct titlebar font
++        const QString titlebarFont =
++            settings.value("org.gnome.desktop.wm.preferences"_L1).value("titlebar-font"_L1).toString();
++        if (titlebarFont.contains("bold"_L1, Qt::CaseInsensitive)) {
++            m_font->setBold(true);
++        }
++    }
+ }
+ 
+ void QWaylandAdwaitaDecoration::updateColors(bool isDark)
+@@ -731,6 +745,10 @@
+ 
+ void QWaylandAdwaitaDecoration::requestRepaint() const
+ {
++    // The settings are first read before the decoration has a window.
++    if (!waylandWindow())
++        return;
++
+     // Set dirty flag
+     if (waylandWindow()->decoration())
+         waylandWindow()->decoration()->update();
+--- a/src/plugins/decorations/adwaita/qwaylandadwaitadecoration_p.h
++++ b/src/plugins/decorations/adwaita/qwaylandadwaitadecoration_p.h
+@@ -17,6 +17,7 @@
+ #include <QtCore/qmap.h>
+ #include <QtCore/qpoint.h>
+ #include <QtCore/qstring.h>
++#include <QtCore/qvariant.h>
+ 
+ #include <memory>
+ 
+@@ -111,6 +112,7 @@
+ private:
+     // Makes a call to xdg-desktop-portal (Settings) to load initial configuration
+     void loadConfiguration();
++    void applySettings(const QMap<QString, QVariantMap> &settings);
+     // Updates color scheme from light to dark and vice-versa
+     void updateColors(bool isDark);
+     // Updates titlebar layout with position and button order

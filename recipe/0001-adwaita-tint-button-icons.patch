@@ -1,0 +1,59 @@
+Subject: [PATCH] adwaita decoration: tint button icons instead of rewriting SVG fills
+
+renderButtonIcon() recolored the titlebar button icons by regex-replacing
+the fill colors in the SVG source. That only works for the spellings of a
+color that the regexes know about, so icons written any other way kept
+their original color and the window buttons were drawn with the wrong
+styling. Render the icon unchanged into an image at the device pixel ratio
+and fill its shape with the requested color (CompositionMode_SourceIn).
+
+--- a/src/plugins/decorations/adwaita/qwaylandadwaitadecoration.cpp
++++ b/src/plugins/decorations/adwaita/qwaylandadwaitadecoration.cpp
+@@ -21,6 +21,7 @@
+ 
+ // QtGui
+ #include <QtGui/QColor>
++#include <QtGui/QImage>
+ #include <QtGui/QPainter>
+ #include <QtGui/QPainterPath>
+ 
+@@ -471,23 +472,23 @@
+ 
+ static void renderButtonIcon(const QString &svgIcon, QPainter *painter, const QRect &rect, const QColor &color)
+ {
+-    painter->save();
+-    painter->setRenderHints(QPainter::Antialiasing, true);
+-
+-    QString icon = svgIcon;
+-    QRegularExpression regexp("fill=[\"']#[0-9A-F]{6}[\"']", QRegularExpression::CaseInsensitiveOption);
+-    QRegularExpression regexpAlt("fill:#[0-9A-F]{6}", QRegularExpression::CaseInsensitiveOption);
+-    QRegularExpression regexpCurrentColor("fill=[\"']currentColor[\"']");
+-    QRegularExpression regexpCurrentColorCss("fill:currentColor",
+-                                             QRegularExpression::CaseInsensitiveOption);
+-    icon.replace(regexp, QString("fill=\"%1\"").arg(color.name()));
+-    icon.replace(regexpAlt, QString("fill:%1").arg(color.name()));
+-    icon.replace(regexpCurrentColor, QString("fill=\"%1\"").arg(color.name()));
+-    icon.replace(regexpCurrentColorCss, QString("fill:%1").arg(color.name()));
+-    QSvgRenderer svgRenderer(icon.toLocal8Bit());
+-    svgRenderer.render(painter, rect);
++    // Render the icon as it is and fill its shape with the requested color,
++    // instead of rewriting the fill colors in the SVG source, which only works
++    // for the ways of writing a color that the rewrite knows about.
++    const qreal dpr = painter->device()->devicePixelRatioF();
++    QImage image(rect.size() * dpr, QImage::Format_ARGB32_Premultiplied);
++    image.setDevicePixelRatio(dpr);
++    image.fill(Qt::transparent);
++
++    QPainter imagePainter(&image);
++    imagePainter.setRenderHints(QPainter::Antialiasing, true);
++    QSvgRenderer svgRenderer(svgIcon.toUtf8());
++    svgRenderer.render(&imagePainter, QRectF(QPointF(0, 0), rect.size()));
++    imagePainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
++    imagePainter.fillRect(QRectF(QPointF(0, 0), rect.size()), color);
++    imagePainter.end();
+ 
+-    painter->restore();
++    painter->drawImage(rect, image);
+ }
+ 
+ static void renderButtonIcon(QWaylandAdwaitaDecoration::ButtonIcon buttonIcon, QPainter *painter, const QRect &rect)
